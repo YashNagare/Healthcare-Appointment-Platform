@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.Instant;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "auth_db")
 @Data
 public class User {
 

@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(name = "patients", uniqueConstraints = @UniqueConstraint(
         name = "uk_patient_user_id",
         columnNames = "patient_id"
-))
+), schema = "patient_db")
 public class Patient {
 
     @Id

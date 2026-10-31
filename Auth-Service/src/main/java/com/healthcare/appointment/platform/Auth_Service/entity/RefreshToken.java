@@ -8,7 +8,7 @@ import java.time.Instant;
 
 @Getter
 @Entity
-@Table(name = "refresh_tokens", indexes = @Index(name = "idx_refresh_token_hash", columnList = "token_hash", unique = true))
+@Table(name = "refresh_tokens", indexes = @Index(name = "idx_refresh_token_hash", columnList = "token_hash", unique = true), schema = "auth_db")
 public class RefreshToken {
 
     @Id
