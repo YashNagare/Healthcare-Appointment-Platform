@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users", schema = "auth_db")
@@ -11,8 +12,9 @@ import java.time.Instant;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id", nullable = false, unique = true)
+    private UUID userId;
 
     @Column(nullable = false, unique = true, length = 255)
     private String email;
@@ -26,12 +28,28 @@ public class User {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
-    private String role = "PATIENT";
+    private Role role = Role.PATIENT;
 
     @Column(nullable = false)
     private boolean enabled = true;
 
     @Column(nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
+
+    @Column(nullable = false)
+    private Instant updatedAt;
+
+    @PrePersist
+    void onCreate() {
+        Instant now = Instant.now();
+        createdAt = now;
+        updatedAt = now;
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = Instant.now();
+    }
 }

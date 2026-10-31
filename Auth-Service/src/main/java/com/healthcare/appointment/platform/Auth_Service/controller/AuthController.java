@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -48,19 +49,19 @@ public class AuthController {
 
     @GetMapping("/me")
     public Map<String, Object> me(Authentication authentication) {
-        Long userId;
+        UUID userId;
         try {
-            userId = Long.valueOf(authentication.getName());
-        } catch (NumberFormatException ex) {
+            userId = UUID.fromString(authentication.getName());
+        } catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid identity");
         }
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User Not Found"));
+                        HttpStatus.UNAUTHORIZED, "User Not Found"));
 
         return Map.of(
-                "id", user.getId(),
+                "userId", user.getUserId(),
                 "email", user.getEmail(),
                 "firstname", user.getFirstName(),
                 "lastname", user.getLastName(),

@@ -5,6 +5,7 @@ import com.healthcare.appointment.platform.Auth_Service.dto.MessageResponse;
 import com.healthcare.appointment.platform.Auth_Service.dto.RegisterRequest;
 import com.healthcare.appointment.platform.Auth_Service.dto.TokenResponse;
 import com.healthcare.appointment.platform.Auth_Service.entity.RefreshToken;
+import com.healthcare.appointment.platform.Auth_Service.entity.Role;
 import com.healthcare.appointment.platform.Auth_Service.entity.User;
 import com.healthcare.appointment.platform.Auth_Service.repository.RefreshTokenRepository;
 import com.healthcare.appointment.platform.Auth_Service.repository.UserRepository;
@@ -58,7 +59,7 @@ public class AuthService {
         user.setFirstName(request.firstName().trim());
         user.setLastName(request.lastName().trim());
 
-        user.setRole("PATIENT");
+        user.setRole(Role.PATIENT);
         user.setEnabled(true);
 
         userRepository.save(user);
@@ -121,7 +122,7 @@ public class AuthService {
         RefreshToken stored = new RefreshToken(user, hashToken(refreshToken), Instant.now().plusMillis(refreshExpirationMs));
 
         refreshTokenRepository.save(stored);
-        return new TokenResponse(accessToken, refreshToken, "Bearer", jwtService.getAccessExpirationMs() / 1000, user.getId(), user.getEmail(), user.getRole());
+        return new TokenResponse(accessToken, refreshToken, "Bearer", jwtService.getAccessExpirationMs() / 1000, user.getUserId(), user.getEmail(), user.getRole());
     }
 
     private String hashToken(String token) {
